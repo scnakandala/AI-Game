@@ -3,12 +3,12 @@
  * and open the template in the editor.
  */
 
-package gamecdienttest;
+package ConectorsTest;
 
 /**
  *
  * @author naka
  */
-public class MainTest {
+public class ReaderTest {
 
 }

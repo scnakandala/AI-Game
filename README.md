@@ -1,6 +1,6 @@
 AI-Game
 Artificial Intelligent Game Client for the "Tanker Game" 
-=======
+========================================================
 Contributors:
 	1. Supun Nakandaaa
 		Department of Computer Science & Engineering 
