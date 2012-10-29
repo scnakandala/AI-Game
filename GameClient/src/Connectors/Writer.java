@@ -38,6 +38,8 @@ public class Writer {
             writer = new BufferedWriter(new OutputStreamWriter(server.getOutputStream()));
             writer.write(message);
             writer.close();
+            server.close();
+            server = null;
             return true;
         } catch (IOException ex) {
             Logger.getLogger(Writer.class.getName()).log(Level.SEVERE, null, ex);

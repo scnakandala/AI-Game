@@ -5,6 +5,7 @@
 
 package Main;
 
+import AIClient.AIClient;
 import Connectors.Reader;
 import MessageParser.MessageParser;
 import Models.Board;
@@ -19,6 +20,9 @@ public class Main {
        MessageParser parser = new MessageParser(board);
        Reader reader = new Reader(parser);
        parser.joinGame();
-       reader.run();
+       AIClient aIClient = new AIClient(parser,board);
+       parser.addObserver(aIClient);
+       (new Thread(reader)).start();
+       (new Thread(aIClient)).start();
     }
 }

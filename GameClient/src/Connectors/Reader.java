@@ -57,7 +57,7 @@ public class Reader implements Runnable{
                 in.read(buffer);
                 String s = (new String(buffer)).split("#")[0];
                 parser.setNewMessage(s);
-                System.out.println(s);
+                //System.out.println(s);
             } catch (IOException ex) {
                 Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
                 break;
