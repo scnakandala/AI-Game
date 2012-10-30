@@ -78,8 +78,10 @@ public class MessageParser extends Observable {
             setGlobalUpdate(message);
         } else if (message.startsWith("C:")) {
             //System.out.println("Coin pile appeared");
+            setCoinPile(message);
         } else if (message.startsWith("L:")) {
             //System.out.println("Life pack appeared");
+            setLifePack(message);
         } else if (message.equals(gameOver)) {
             //System.out.println("Game finished");
         } else {
@@ -98,7 +100,7 @@ public class MessageParser extends Observable {
             int direction = Integer.parseInt(player[2].trim());
             int num = (i + 1) * 10 + direction;
             b[xPos][yPos] = num;
-            if (thisPlayerNumber == i + 1) {
+            if (thisPlayerNumber == i) {
                 board.setPlayerPositins(new int[]{xPos, yPos, direction});
             }
         }
@@ -119,7 +121,7 @@ public class MessageParser extends Observable {
                 int xPos = Integer.parseInt(blocks[j].split(",")[0]);
                 int yPos = Integer.parseInt(blocks[j].split(",")[1]);
 
-                b[xPos][yPos] = i + 1;
+                b[xPos][yPos] = i + 4;
             }
         }
         board.setBoard(b);
@@ -147,7 +149,7 @@ public class MessageParser extends Observable {
 
             playerStats[i] = new int[]{xPos, yPos, direction, shot, health, coins, points};
             b[xPos][yPos] = num;
-            if (thisPlayerNumber == i + 1) {
+            if (thisPlayerNumber == i) {
                 board.setPlayerPositins(new int[]{xPos, yPos, direction});
             }
         }
@@ -158,5 +160,24 @@ public class MessageParser extends Observable {
 
         setChanged();
         notifyObservers("GLOBAL_UPDATE");
+    }
+
+    public void setCoinPile(String s){
+        String[] arr = s.split(":");
+        int x = Integer.parseInt(arr[1].split(",")[0]);
+        int y = Integer.parseInt(arr[1].split(",")[1]);
+        int lt = Integer.parseInt(arr[2].trim());
+        int val = Integer.parseInt(arr[3].trim());
+
+        board.addCoinPile(new Integer[]{x,y,lt,val});
+    }
+
+    public void setLifePack( String s){
+        String[] arr = s.split(":");
+        int x = Integer.parseInt(arr[1].split(",")[0]);
+        int y = Integer.parseInt(arr[1].split(",")[1]);
+        int lt = Integer.parseInt(arr[2].trim());
+
+        board.addLifePacks(new Integer[]{x,y,lt});
     }
 }
