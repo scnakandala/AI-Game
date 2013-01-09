@@ -9,6 +9,8 @@ import models.Player;
 
 public class GameEngine extends Observable implements Observer{
 
+    public static final int NO_ROWS=10,NO_COLUMNS =10;
+
     public static GameEngine gameEngineAPI = null;
     private MessageParser messageParser;
     private MapController mapController;
@@ -58,6 +60,10 @@ public class GameEngine extends Observable implements Observer{
 
     public Player[] getPlayers(){
         return map.getPlayers();
+    }
+
+    public Player getThisPlayer(){
+        return map.thisPlayer();
     }
 
     public void update(Observable o, Object arg) {

@@ -80,6 +80,9 @@ public class Map extends Observable {
 
     public void updatePlayer(String string) {
         Player player = new Player(Integer.parseInt(string.split(";")[1].split(",")[0]), Integer.parseInt(string.split(";")[1].split(",")[1]), Integer.parseInt(string.split(";")[2]), string.split(";")[0], Integer.parseInt(string.split(";")[4]), Integer.parseInt(string.split(";")[6]), Integer.parseInt(string.split(";")[5]), !string.split(";")[0].equals(myPlayerName), Integer.parseInt(string.split(";")[3]) == 1);
+        if(player.getHealth()==0){
+            player = new DeadPlayer(player);
+        }
         int playerNo = Integer.parseInt(string.split(";")[0].toString().charAt(1) + "");
         board[players[playerNo].getX()][players[playerNo].getY()] = null;
         board[player.getX()][player.getY()] = player;
@@ -154,5 +157,14 @@ public class Map extends Observable {
         }
         setChanged();
         notifyObservers("PLAYERS_INITIALISED");
+    }
+
+    public Player thisPlayer() {
+        for(int i=0;i<5;i++){
+            if(players[i]!=null && players[i].getName().equals(myPlayerName)){
+                return players[i];
+            }
+        }
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package ui;
+ package ui;
 
 import gameengine.GameEngine;
 import java.awt.BorderLayout;
@@ -16,6 +16,7 @@ import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import models.Brick;
 import models.Coin;
+import models.DeadPlayer;
 import models.LifePack;
 import models.MapObject;
 import models.Player;
@@ -23,27 +24,24 @@ import models.Stone;
 import models.Water;
 
 public class GameMap extends JFrame implements Observer {
-
-    public static final int NUMBER_OF_ROWS = 10;
-    public static final int NUMBER_OF_COLUMNS = 10;
     private JPanel squaresPanel;
     private MapObject[][] map;
     private Player[] players;
     private JTable table;
 
     public GameMap() throws IOException {
-        map = new MapObject[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
+        map = new MapObject[GameEngine.NO_ROWS][GameEngine.NO_COLUMNS];
         players = null;
         initComponents();
     }
 
     private void createSquares() throws IOException {
-        LayoutManager layout = new GridLayout(NUMBER_OF_ROWS, NUMBER_OF_COLUMNS);
+        LayoutManager layout = new GridLayout(GameEngine.NO_ROWS, GameEngine.NO_COLUMNS);
         squaresPanel = new JPanel();
         squaresPanel.setBorder(new EmptyBorder(8, 8, 4, 0));
         squaresPanel.setLayout(layout);
-        for (int j = 0; j < NUMBER_OF_ROWS; j++) {
-            for (int i = 0; i < NUMBER_OF_COLUMNS; i++) {
+        for (int j = 0; j < GameEngine.NO_ROWS; j++) {
+            for (int i = 0; i < GameEngine.NO_COLUMNS; i++) {
                 JPanel squarePanel = getPanel(i, j);
                 squaresPanel.add(squarePanel);
             }
@@ -79,7 +77,7 @@ public class GameMap extends JFrame implements Observer {
     }
 
     private JPanel getPanel(int x, int y) {
-        String freeSpace = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/green.png";
+        String freeSpace = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/floor.png";
         String water = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/water.png";
         String stone = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/stone.png";
         String brick = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/brick.png";
@@ -121,7 +119,7 @@ public class GameMap extends JFrame implements Observer {
             panel = new ImagePanel(coinPile);
         } else if (obj instanceof LifePack) {
             panel = new ImagePanel(lifePack);
-        } else if (obj instanceof Player) {
+        } else if (obj instanceof Player && !(obj instanceof DeadPlayer )) {
             Player player = (Player) obj;
             if (player.getName().equals("P0")) {
                 if (player.getDirection() == 0) {
@@ -184,7 +182,7 @@ public class GameMap extends JFrame implements Observer {
     private void initComponents() throws IOException {
 
         /*the cell width is 50 pix*/
-        int boardSize = (int) ((int) 50 * NUMBER_OF_ROWS * 1.1);
+        int boardSize = (int) ((int) 50 * GameEngine.NO_ROWS * 1.1);
 
         createSquares();
         createTable();
@@ -192,6 +190,7 @@ public class GameMap extends JFrame implements Observer {
         setTitle("GameMap");
         getContentPane().add(squaresPanel, BorderLayout.CENTER);
         getContentPane().add(table,BorderLayout.AFTER_LAST_LINE);
+        setLocationByPlatform(true);
         setVisible(true);
         Dimension preferredSize = new Dimension();
         preferredSize.width = boardSize;

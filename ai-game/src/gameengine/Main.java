@@ -1,28 +1,25 @@
 package gameengine;
 
-import ai.AIPlayer;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import ui.GameMap;
+import ai.AIPlayerVersion1;
+import ui.Settings;
 
 public class Main {
 
     public static void main(String[] args) {
         final GameEngine gameEngine = GameEngine.getInstance();
-        AIPlayer aIPlayer = new AIPlayer();
+        AIPlayerVersion1 aIPlayer = new AIPlayerVersion1();
         gameEngine.addObserver(aIPlayer);
-        (new Runnable() {
+        new Runnable() {
             public void run() {
-                GameMap map;
-                try {
-                    map = new GameMap();
-                    gameEngine.addObserver(map);
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Settings dialog = new Settings(new javax.swing.JFrame(), true);
+                dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosing(java.awt.event.WindowEvent e) {
+                        System.exit(0);
+                    }
+                });
+                dialog.setVisible(true);
             }
-        }).run();
-        gameEngine.join();
+        }.run();
     }
 }
