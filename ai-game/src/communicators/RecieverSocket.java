@@ -15,7 +15,7 @@ public class RecieverSocket extends Observable implements Runnable {
     private byte[] buffer;
 
     public RecieverSocket() {
-        int port = 7000;
+        int port = Integer.parseInt(Settings.recieverPort);
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException ex) {

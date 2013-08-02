@@ -5,17 +5,17 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import models.Map;
+import models.GameMap;
 
 import communicators.MessageParser;
 
 public class MapController implements Observer {
 
-    private Map map;
+    private GameMap map;
 
     public MapController() {
 	MessageParser.getInstance().addObserver(this);
-	map = Map.getInstance();
+	map = GameMap.getInstance();
     }
 
     @Override

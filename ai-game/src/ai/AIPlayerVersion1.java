@@ -18,7 +18,7 @@ public class AIPlayerVersion1 implements Observer {
     private Queue queue;
 
     public AIPlayerVersion1() {
-        nodeMap = new Node[GameEngine.NO_ROWS][GameEngine.NO_COLUMNS];
+        nodeMap = new Node[GameEngine.SIZE][GameEngine.SIZE];
         queue = new Queue();
     }
 
@@ -224,7 +224,7 @@ public class AIPlayerVersion1 implements Observer {
     }
 
     private boolean isIn(int x, int y) {
-        if (x < GameEngine.NO_ROWS && y < GameEngine.NO_COLUMNS && x >= 0 && y >= 0) {
+        if (x < GameEngine.SIZE && y < GameEngine.SIZE && x >= 0 && y >= 0) {
             return true;
         } else {
             return false;

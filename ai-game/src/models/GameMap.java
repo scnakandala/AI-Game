@@ -2,24 +2,23 @@ package models;
 
 import java.util.Observable;
 
-public class Map extends Observable {
+public class GameMap extends Observable {
 
-    public static final int HEIGHT = 10, WIDTH = 10;
-    private static Map map = null;
+    private static GameMap map = null;
     private MapObject[][] board;
     private String myPlayerName;
     private Player[] players;
 
-    private Map() {
-        board = new MapObject[HEIGHT][WIDTH];
+    private GameMap() {
+        board = new MapObject[gameengine.GameEngine.SIZE][gameengine.GameEngine.SIZE];
         players = new Player[5];
     }
 
-    public static Map getInstance() {
-        if (Map.map == null) {
-            Map.map = new Map();
+    public static GameMap getInstance() {
+        if (GameMap.map == null) {
+            GameMap.map = new GameMap();
         }
-        return Map.map;
+        return GameMap.map;
     }
 
     public void initialiseMap(String string) {
@@ -125,8 +124,8 @@ public class Map extends Observable {
     }
 
     private void reduceBountyRemainingTime() {
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
+        for (int i = 0; i < gameengine.GameEngine.SIZE; i++) {
+            for (int j = 0; j < gameengine.GameEngine.SIZE; j++) {
                 if (board[i][j] instanceof Bounty) {
                     Bounty bounty = (Bounty) board[i][j];
                     bounty.setTimeToLive(bounty.getTimeToLive() - 1);

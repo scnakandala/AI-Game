@@ -149,14 +149,17 @@ public class Settings extends javax.swing.JDialog {
 
     private void joinButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinButtonActionPerformed
         //Initialisation of data
+        communicators.Settings.serverIp = serverAddress.getText();
+        communicators.Settings.senderPort = sendingPort.getText();
+        communicators.Settings.recieverPort = listeningPort.getText();
+        
         this.dispose();
+        
         GameEngine.getInstance().join();
         (new Runnable() {
             public void run() {
-                GameMap map;
                 try {
-                    map = new GameMap();
-                    GameEngine.getInstance().addObserver(map);
+                    GameEngine.getInstance().addObserver(new GameMapUI());
                 } catch (IOException ex) {
                     Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
                 }

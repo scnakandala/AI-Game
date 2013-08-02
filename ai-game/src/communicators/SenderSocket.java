@@ -16,8 +16,8 @@ public class SenderSocket {
 	    
 	    
 	    public SenderSocket() {
-	        this.host = "127.0.0.1";
-	        this.port = 6000;
+	        this.host = Settings.serverIp;
+	        this.port = Integer.parseInt(Settings.senderPort);
 	    }
 
 	    private void connect() {

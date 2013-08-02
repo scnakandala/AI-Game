@@ -4,22 +4,25 @@ import communicators.MessageParser;
 import java.util.Observable;
 import java.util.Observer;
 import models.MapObject;
-import models.Map;
+import models.GameMap;
 import models.Player;
 
 public class GameEngine extends Observable implements Observer{
 
-    public static final int NO_ROWS=10,NO_COLUMNS =10;
+    public static final int SIZE=20;
 
     public static GameEngine gameEngineAPI = null;
     private MessageParser messageParser;
+    
+    //don't remove. This should be created though not used. It is an observer
     private MapController mapController;
-    private Map map;
+    
+    private GameMap map;
 
     private GameEngine() {
         this.messageParser = MessageParser.getInstance();
         this.mapController = new MapController();
-        this.map = Map.getInstance();
+        this.map = GameMap.getInstance();
         map.addObserver(this);
     }
 
@@ -67,7 +70,7 @@ public class GameEngine extends Observable implements Observer{
     }
 
     public void update(Observable o, Object arg) {
-        if(o instanceof Map){
+        if(o instanceof GameMap){
             setChanged();
             notifyObservers(arg);
         }

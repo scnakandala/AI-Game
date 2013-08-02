@@ -23,26 +23,26 @@ import models.Player;
 import models.Stone;
 import models.Water;
 
-public class GameMap extends JFrame implements Observer {
+public class GameMapUI extends JFrame implements Observer {
 
     private JPanel squaresPanel;
     private MapObject[][] map;
     private Player[] players;
     private JTable table;
 
-    public GameMap() throws IOException {
-        map = new MapObject[GameEngine.NO_ROWS][GameEngine.NO_COLUMNS];
+    public GameMapUI() throws IOException {
+        map = new MapObject[GameEngine.SIZE][GameEngine.SIZE];
         players = null;
         initComponents();
     }
 
     private void createSquares() throws IOException {
-        LayoutManager layout = new GridLayout(GameEngine.NO_ROWS, GameEngine.NO_COLUMNS);
+        LayoutManager layout = new GridLayout(GameEngine.SIZE, GameEngine.SIZE);
         squaresPanel = new JPanel();
         squaresPanel.setBorder(new EmptyBorder(8, 8, 4, 0));
         squaresPanel.setLayout(layout);
-        for (int j = 0; j < GameEngine.NO_ROWS; j++) {
-            for (int i = 0; i < GameEngine.NO_COLUMNS; i++) {
+        for (int j = 0; j < GameEngine.SIZE; j++) {
+            for (int i = 0; i < GameEngine.SIZE; i++) {
                 JPanel squarePanel = getPanel(i, j);
                 squaresPanel.add(squarePanel);
             }
@@ -278,14 +278,13 @@ public class GameMap extends JFrame implements Observer {
         } else {
             panel = new ImagePanel(freeSpace);
         }
-
         return panel;
     }
 
     private void initComponents() throws IOException {
 
         /*the cell width is 50 pix*/
-        int boardSize = (int) ((int) 50 * GameEngine.NO_ROWS * 1.1);
+        int boardSize = (int) ((int) 50 * GameEngine.SIZE * 1.1);
 
         createSquares();
         createTable();
@@ -316,7 +315,7 @@ public class GameMap extends JFrame implements Observer {
                 setVisible(true);
                 repaint();
             } catch (IOException ex) {
-                Logger.getLogger(GameMap.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(GameMapUI.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -325,9 +324,9 @@ public class GameMap extends JFrame implements Observer {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    GameMap map = new GameMap();
+                    GameMapUI map = new GameMapUI();
                 } catch (IOException ex) {
-                    Logger.getLogger(GameMap.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(GameMapUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
