@@ -22,6 +22,11 @@ public class ImagePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, 50, 50, null);
+        int size = getImageSize();
+        g.drawImage(image, 0, 0, size, size, null);
+    }
+    
+    public static int getImageSize(){
+        return gameengine.GameEngine.SIZE == 20 ? 25 : 50;
     }
 }

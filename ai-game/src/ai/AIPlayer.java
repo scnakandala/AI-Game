@@ -10,14 +10,14 @@ import models.MapObject;
 import models.Obstacle;
 import models.Player;
 
-public class AIPlayerVersion1 implements Observer {
+public class AIPlayer implements Observer {
 
     private MapObject[][] map;
     private Player thisPlayer;
     private Node nodeMap[][];
     private Queue queue;
 
-    public AIPlayerVersion1() {
+    public AIPlayer() {
         nodeMap = new Node[GameEngine.SIZE][GameEngine.SIZE];
         queue = new Queue();
     }

@@ -39,7 +39,7 @@ public class GameMapUI extends JFrame implements Observer {
     private void createSquares() throws IOException {
         LayoutManager layout = new GridLayout(GameEngine.SIZE, GameEngine.SIZE);
         squaresPanel = new JPanel();
-        squaresPanel.setBorder(new EmptyBorder(8, 8, 4, 0));
+        squaresPanel.setBorder(new EmptyBorder(2, 2, 2, 0));
         squaresPanel.setLayout(layout);
         for (int j = 0; j < GameEngine.SIZE; j++) {
             for (int i = 0; i < GameEngine.SIZE; i++) {
@@ -124,7 +124,7 @@ public class GameMapUI extends JFrame implements Observer {
         String p4_south = "./src/resources/tanky1_s.png";
         String p4_south_fire = "./src/resources/tanky1_sf.png";
         String p4_west = "./src/resources/tanky1_w.png";
-        String p4_west_fire = "./src/resources/tanky1_w_f.jpg";
+        String p4_west_fire = "./src/resources/tanky1_w_f.png";
 
 
         ImagePanel panel;
@@ -275,6 +275,8 @@ public class GameMapUI extends JFrame implements Observer {
                     }
                 }
             }
+        } else if ((obj instanceof DeadPlayer) && (((DeadPlayer) obj).getCoins() > 0)) {
+            panel = new ImagePanel(coinPile);
         } else {
             panel = new ImagePanel(freeSpace);
         }
@@ -284,7 +286,7 @@ public class GameMapUI extends JFrame implements Observer {
     private void initComponents() throws IOException {
 
         /*the cell width is 50 pix*/
-        int boardSize = (int) ((int) 50 * GameEngine.SIZE * 1.1);
+        int boardSize = (int) ((int) ImagePanel.getImageSize() * GameEngine.SIZE * 1.1);
 
         createSquares();
         createTable();

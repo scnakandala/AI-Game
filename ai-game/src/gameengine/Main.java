@@ -1,14 +1,18 @@
 package gameengine;
 
-import ai.AIPlayerVersion1;
+import ai.AIPlayer;
 import ui.Settings;
 
 public class Main {
 
     public static void main(String[] args) {
         final GameEngine gameEngine = GameEngine.getInstance();
-        AIPlayerVersion1 aIPlayer = new AIPlayerVersion1();
+        // Creates an AI agent and adds it as an observer for the GameEngine
+        AIPlayer aIPlayer = new AIPlayer();
         gameEngine.addObserver(aIPlayer);
+        
+        // Runs the Settings UI
+        // This thread then creates the Main GUI thread and joins the game
         new Runnable() {
             public void run() {
                 Settings dialog = new Settings(new javax.swing.JFrame(), true);
