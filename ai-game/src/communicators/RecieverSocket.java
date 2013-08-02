@@ -38,6 +38,7 @@ public class RecieverSocket extends Observable implements Runnable {
                 String message = (new String(buffer)).split("#")[0];
 
                 setChanged();
+                // System.out.println(message);
                 notifyObservers(message);
             } catch (IOException ex) {
                 Logger.getLogger(RecieverSocket.class.getName()).log(Level.SEVERE, null, ex);

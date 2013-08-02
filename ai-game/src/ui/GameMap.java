@@ -1,4 +1,4 @@
- package ui;
+package ui;
 
 import gameengine.GameEngine;
 import java.awt.BorderLayout;
@@ -24,6 +24,7 @@ import models.Stone;
 import models.Water;
 
 public class GameMap extends JFrame implements Observer {
+
     private JPanel squaresPanel;
     private MapObject[][] map;
     private Player[] players;
@@ -49,7 +50,7 @@ public class GameMap extends JFrame implements Observer {
     }
 
     private void createTable() {
-        String[] playerColours = {"Blue","Red","Green","Purple","Yello"};
+        String[] playerColours = {"Blue", "Red", "Green", "Purple", "Yello"};
         if (players == null) {
             String columnNames[] = {"ID", "Points $", "Coins $", "Life %"};
             Object rowData[][] = {{"Player ID", "Points $", "Coins $", "Life %"},
@@ -59,50 +60,71 @@ public class GameMap extends JFrame implements Observer {
                 {"P3", "0", "0", "0"},
                 {"P4", "0", "0", "0"}};
             table = new NonEditableTable(rowData, columnNames);
-        }else{
-            for(int i=0;i<5;i++){
-                if(players[i]!=null){
+        } else {
+            for (int i = 0; i < 5; i++) {
+                if (players[i] != null) {
                     Player p = players[i];
-                    if(p.isOpponent()){
-                        table.setValueAt("P"+i+" ["+playerColours[i]+"]", i+1, 0);
-                    }else{
-                        table.setValueAt("P"+i+" [User - "+playerColours[i]+"]", i+1, 0);
+                    if (p.isOpponent()) {
+                        table.setValueAt("P" + i + " [" + playerColours[i] + "]", i + 1, 0);
+                    } else {
+                        table.setValueAt("P" + i + " [User - " + playerColours[i] + "]", i + 1, 0);
                     }
-                    table.setValueAt(p.getPoints(), i+1, 1);
-                    table.setValueAt(p.getCoins(), i+1, 2);
-                    table.setValueAt(p.getHealth(), i+1, 3);
+
+                    table.setValueAt(p.getPoints(), i + 1, 1);
+                    table.setValueAt(p.getCoins(), i + 1, 2);
+                    table.setValueAt(p.getHealth(), i + 1, 3);
                 }
             }
         }
     }
 
     private JPanel getPanel(int x, int y) {
-        String freeSpace = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/floor.png";
-        String water = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/water.png";
-        String stone = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/stone.png";
-        String brick = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/brick.png";
-        String coinPile = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/coins.png";
-        String lifePack = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/health.png";
-        String p0_north = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankb1_n.png";
-        String p0_east = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankb1_e.png";
-        String p0_south = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankb1_s.png";
-        String p0_west = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankb1_w.png";
-        String p1_north = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankf1_n.png";
-        String p1_east = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankf1_e.png";
-        String p1_south = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankf1_s.png";
-        String p1_west = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankf1_w.png";
-        String p2_north = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankg1_n.png";
-        String p2_east = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankg1_e.png";
-        String p2_south = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankg1_s.png";
-        String p2_west = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankg1_w.png";
-        String p3_north = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankp1_n.png";
-        String p3_east = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankp1_e.png";
-        String p3_south = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankp1_s.png";
-        String p3_west = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tankp1_w.png";
-        String p4_north = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tanky1_n.png";
-        String p4_east = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tanky1_e.png";
-        String p4_south = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tanky1_s.png";
-        String p4_west = "C:/Users/naka/Documents/NetBeansProjects/ai-game/src/resources/tanky1_w.png";
+        String freeSpace = "./src/resources/floor.png";
+        String water = "./src/resources/water.png";
+        String stone = "./src/resources/stone.png";
+        String brick = "./src/resources/brick.png";
+        String coinPile = "./src/resources/coins.png";
+        String lifePack = "./src/resources/health.png";
+        String p0_north = "./src/resources/tankb1_n.png";
+        String p0_north_fire = "./src/resources/tankb1_nf.png";
+        String p0_east = "./src/resources/tankb1_e.png";
+        String p0_east_fire = "./src/resources/tankb1_ef.png";
+        String p0_south = "./src/resources/tankb1_s.png";
+        String p0_south_fire = "./src/resources/tankb1_sf.png";
+        String p0_west = "./src/resources/tankb1_w.png";
+        String p0_west_fire = "./src/resources/tankb1_wf.png";
+        String p1_north = "./src/resources/tankf1_n.png";
+        String p1_north_fire = "./src/resources/tankf1_nf.png";
+        String p1_east = "./src/resources/tankf1_e.png";
+        String p1_east_fire = "./src/resources/tankf1_ef.png";
+        String p1_south = "./src/resources/tankf1_s.png";
+        String p1_south_fire = "./src/resources/tankf1_sf.png";
+        String p1_west = "./src/resources/tankf1_w.png";
+        String p1_west_fire = "./src/resources/tankf1_wf.png";
+        String p2_north = "./src/resources/tankg1_n.png";
+        String p2_north_fire = "./src/resources/tankg1_nf.png";
+        String p2_east = "./src/resources/tankg1_e.png";
+        String p2_east_fire = "./src/resources/tankg1_ef.png";
+        String p2_south = "./src/resources/tankg1_s.png";
+        String p2_south_fire = "./src/resources/tankg1_sf.png";
+        String p2_west = "./src/resources/tankg1_w.png";
+        String p2_west_fire = "./src/resources/tankg1_wf.png";
+        String p3_north = "./src/resources/tankp1_n.png";
+        String p3_north_fire = "./src/resources/tankp1_nf.png";
+        String p3_east = "./src/resources/tankp1_e.png";
+        String p3_east_fire = "./src/resources/tankp1_ef.png";
+        String p3_south = "./src/resources/tankp1_s.png";
+        String p3_south_fire = "./src/resources/tankp1_sf.png";
+        String p3_west = "./src/resources/tankp1_w.png";
+        String p3_west_fire = "./src/resources/tankp1_wf.png";
+        String p4_north = "./src/resources/tanky1_n.png";
+        String p4_north_fire = "./src/resources/tanky1_nf.png";
+        String p4_east = "./src/resources/tanky1_e.png";
+        String p4_east_fire = "./src/resources/tanky1_ef.png";
+        String p4_south = "./src/resources/tanky1_s.png";
+        String p4_south_fire = "./src/resources/tanky1_sf.png";
+        String p4_west = "./src/resources/tanky1_w.png";
+        String p4_west_fire = "./src/resources/tanky1_w_f.jpg";
 
 
         ImagePanel panel;
@@ -119,57 +141,138 @@ public class GameMap extends JFrame implements Observer {
             panel = new ImagePanel(coinPile);
         } else if (obj instanceof LifePack) {
             panel = new ImagePanel(lifePack);
-        } else if (obj instanceof Player && !(obj instanceof DeadPlayer )) {
+        } else if (obj instanceof Player && !(obj instanceof DeadPlayer)) {
             Player player = (Player) obj;
             if (player.getName().equals("P0")) {
                 if (player.getDirection() == 0) {
-                    panel = new ImagePanel(p0_north);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p0_north_fire);
+                    } else {
+                        panel = new ImagePanel(p0_north);
+                    }
+
                 } else if (player.getDirection() == 1) {
-                    panel = new ImagePanel(p0_east);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p0_east_fire);
+                    } else {
+                        panel = new ImagePanel(p0_east);
+                    }
                 } else if (player.getDirection() == 2) {
-                    panel = new ImagePanel(p0_south);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p0_south_fire);
+                    } else {
+                        panel = new ImagePanel(p0_south);
+                    }
                 } else {
-                    panel = new ImagePanel(p0_west);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p0_west_fire);
+                    } else {
+                        panel = new ImagePanel(p0_west);
+                    }
                 }
             } else if (player.getName().equals("P1")) {
                 if (player.getDirection() == 0) {
-                    panel = new ImagePanel(p1_north);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p1_north_fire);
+                    } else {
+                        panel = new ImagePanel(p1_north);
+                    }
                 } else if (player.getDirection() == 1) {
-                    panel = new ImagePanel(p1_east);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p1_east_fire);
+                    } else {
+                        panel = new ImagePanel(p1_east);
+                    }
                 } else if (player.getDirection() == 2) {
-                    panel = new ImagePanel(p1_south);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p1_south_fire);
+                    } else {
+                        panel = new ImagePanel(p1_south);
+                    }
                 } else {
-                    panel = new ImagePanel(p1_west);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p1_west_fire);
+                    } else {
+                        panel = new ImagePanel(p1_west);
+                    }
                 }
             } else if (player.getName().equals("P2")) {
                 if (((Player) obj).getDirection() == 0) {
-                    panel = new ImagePanel(p2_north);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p2_north_fire);
+                    } else {
+                        panel = new ImagePanel(p2_north);
+                    }
                 } else if (player.getDirection() == 1) {
-                    panel = new ImagePanel(p2_east);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p2_east_fire);
+                    } else {
+                        panel = new ImagePanel(p2_east);
+                    }
                 } else if (player.getDirection() == 2) {
-                    panel = new ImagePanel(p2_south);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p2_south_fire);
+                    } else {
+                        panel = new ImagePanel(p2_south);
+                    }
                 } else {
-                    panel = new ImagePanel(p2_west);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p2_west_fire);
+                    } else {
+                        panel = new ImagePanel(p2_west);
+                    }
                 }
             } else if (player.getName().equals("P3")) {
                 if (((Player) obj).getDirection() == 0) {
-                    panel = new ImagePanel(p3_north);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p3_north_fire);
+                    } else {
+                        panel = new ImagePanel(p3_north);
+                    }
                 } else if (player.getDirection() == 1) {
-                    panel = new ImagePanel(p3_east);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p3_east_fire);
+                    } else {
+                        panel = new ImagePanel(p3_east);
+                    }
                 } else if (player.getDirection() == 2) {
-                    panel = new ImagePanel(p3_south);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p3_south_fire);
+                    } else {
+                        panel = new ImagePanel(p3_south);
+                    }
                 } else {
-                    panel = new ImagePanel(p3_west);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p3_west_fire);
+                    } else {
+                        panel = new ImagePanel(p3_west);
+                    }
                 }
             } else {
                 if (player.getDirection() == 0) {
-                    panel = new ImagePanel(p4_north);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p4_north_fire);
+                    } else {
+                        panel = new ImagePanel(p4_north);
+                    }
                 } else if (player.getDirection() == 1) {
-                    panel = new ImagePanel(p4_east);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p4_east_fire);
+                    } else {
+                        panel = new ImagePanel(p4_east);
+                    }
                 } else if (player.getDirection() == 2) {
-                    panel = new ImagePanel(p4_south);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p4_south_fire);
+                    } else {
+                        panel = new ImagePanel(p4_south);
+                    }
                 } else {
-                    panel = new ImagePanel(p4_west);
+                    if (player.isShot()) {
+                        panel = new ImagePanel(p4_west_fire);
+                    } else {
+                        panel = new ImagePanel(p4_west);
+                    }
                 }
             }
         } else {
@@ -189,13 +292,13 @@ public class GameMap extends JFrame implements Observer {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("GameMap");
         getContentPane().add(squaresPanel, BorderLayout.CENTER);
-        getContentPane().add(table,BorderLayout.AFTER_LAST_LINE);
+        getContentPane().add(table, BorderLayout.AFTER_LAST_LINE);
         setLocationByPlatform(true);
         setVisible(true);
         Dimension preferredSize = new Dimension();
         preferredSize.width = boardSize;
         /*hard coded the value to match the scenario*/
-        preferredSize.height = boardSize+100;
+        preferredSize.height = boardSize + 100;
         setPreferredSize(preferredSize);
         setResizable(false);
         pack();
@@ -220,7 +323,6 @@ public class GameMap extends JFrame implements Observer {
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
-
             public void run() {
                 try {
                     GameMap map = new GameMap();
