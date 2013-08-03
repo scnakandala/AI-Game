@@ -1,6 +1,6 @@
 package ai;
 
-public class Node {
+public class QueueNode {
 
         private int X = -1;             // X and Y coordinates of the node
         private int Y = -1;

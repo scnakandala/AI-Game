@@ -14,11 +14,12 @@ public class AIPlayer implements Observer {
 
     private MapObject[][] map;
     private Player thisPlayer;
-    private Node nodeMap[][];
+    private QueueNode nodeMap[][];
     private Queue queue;
+    private boolean previousShoot = false;
 
     public AIPlayer() {
-        nodeMap = new Node[GameEngine.SIZE][GameEngine.SIZE];
+        nodeMap = new QueueNode[GameEngine.SIZE][GameEngine.SIZE];
         queue = new Queue();
     }
 
@@ -36,14 +37,88 @@ public class AIPlayer implements Observer {
         String path = getNextPath();
         int rotate = rotateAndKll();
 
-        if(thisPlayer.getHealth()>50 && enemyAhead(1)){
+        if (previousShoot && enemyAheadDead()) {
+            if (enemyAheadDead()) {
+                makeMove(thisPlayer.getDirection());
+            }
+            previousShoot = false;
+        } else if (path.length() > 0 && path.length() < 10) {
+            makeMove(Integer.parseInt(path.charAt(0) + ""));
+        } else if (thisPlayer.getHealth() > 50 && enemyAhead(1)) {
             makeMove(99);//shoot
-        }else if(rotate!=-1){
+            previousShoot = true;
+        } else if (rotate != -1) {
             makeMove(rotate);
-        }else if(path.length()>0){
-            makeMove(Integer.parseInt(path.charAt(0)+""));
-        }else{
-          //No muve accerding to the current algrithm
+        } else if (path.length() > 0) {
+            makeMove(Integer.parseInt(path.charAt(0) + ""));
+        } else {
+            int[] arr ;
+            if (thisPlayer.getX() != 2 && thisPlayer.getY() != 2) {
+                arr = new int[]{2, 2};
+            }else if(thisPlayer.getX() != 2 && thisPlayer.getY() != 3) {
+                arr = new int[]{2, 3};
+            }else if(thisPlayer.getX() != 2 && thisPlayer.getY() != 4) {
+                arr = new int[]{2, 4};
+            }else if(thisPlayer.getX() != 3 && thisPlayer.getY() != 2) {
+                arr = new int[]{3, 4};
+            }else if(thisPlayer.getX() != 3 && thisPlayer.getY() != 3) {
+                arr = new int[]{3, 3};
+            }else if(thisPlayer.getX() != 3 && thisPlayer.getY() != 4) {
+                arr = new int[]{3, 2};
+            }else if(thisPlayer.getX() != 4 && thisPlayer.getY() != 2) {
+                arr = new int[]{4, 2};
+            }else if(thisPlayer.getX() != 4 && thisPlayer.getY() != 3) {
+                arr = new int[]{4, 3};
+            }else if(thisPlayer.getX() != 4 && thisPlayer.getY() != 4) {
+                arr = new int[]{4, 4};
+            }else{
+                arr = new int[]{0, 0};
+            }
+            
+            String defPath = findpath(arr);
+            makeMove(Integer.parseInt(defPath.charAt(0) + ""));
+        }
+    }
+
+    private boolean enemyAheadDead() {
+        int direction = this.thisPlayer.getDirection();
+        int dist = 1;
+        switch (direction) {
+            case 0:
+                if (isIn(thisPlayer.getX(), thisPlayer.getY() - dist)
+                        && map[thisPlayer.getX()][thisPlayer.getY() - dist] instanceof Player
+                        && (map[thisPlayer.getX()][thisPlayer.getY() - dist] instanceof DeadPlayer)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 1:
+                if (isIn(thisPlayer.getX() + dist, thisPlayer.getY())
+                        && map[thisPlayer.getX() + dist][thisPlayer.getY()] instanceof Player
+                        && (map[thisPlayer.getX() + dist][thisPlayer.getY()] instanceof DeadPlayer)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 2:
+                if (isIn(thisPlayer.getX(), thisPlayer.getY() + dist)
+                        && map[thisPlayer.getX()][thisPlayer.getY() + dist] instanceof Player
+                        && (map[thisPlayer.getX()][thisPlayer.getY() + dist] instanceof DeadPlayer)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 3:
+                if (isIn(thisPlayer.getX() - dist, thisPlayer.getY())
+                        && map[thisPlayer.getX() - dist][thisPlayer.getY()] instanceof Player
+                        && (map[thisPlayer.getX() - dist][thisPlayer.getY()] instanceof DeadPlayer)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            default:
+                return false;
+
         }
     }
 
@@ -68,7 +143,7 @@ public class AIPlayer implements Observer {
 
     private String findpath(int[] Tco) {
         String path = "";
-        Node curruntNode = nodeMap[Tco[0]][Tco[1]];
+        QueueNode curruntNode = nodeMap[Tco[0]][Tco[1]];
 
         while (curruntNode.getPreviousX() >= 0) {
             if (curruntNode.getPreviousX() == curruntNode.getX()) {
@@ -96,7 +171,7 @@ public class AIPlayer implements Observer {
         boolean targetFound = false;
         for (int i = 0; i < nodeMap.length; i++) {
             for (int j = 0; j < nodeMap.length; j++) {
-                nodeMap[i][j] = new Node();
+                nodeMap[i][j] = new QueueNode();
             }
         }
 
@@ -115,62 +190,223 @@ public class AIPlayer implements Observer {
         queue.enqueue(nodeMap[Sco[0]][Sco[1]]);
 
         while (!targetFound && !queue.isEmpty()) {
-            Node current = queue.dequeue();
+            QueueNode current = queue.dequeue();
 
             int x = current.getX();
             int y = current.getY();
+            int direction = thisPlayer.getDirection();
+            switch (direction) {
+                case 0:
+                    if (isIn(x, y - 1)) {
+                        if (nodeMap[x][y - 1].getState() == 0) {
+                            targetFound = discoverNode(x, y - 1);
+                            nodeMap[x][y - 1].setPreviousX(x);
+                            nodeMap[x][y - 1].setPreviousY(y);
+                            if (targetFound) {
+                                Tco[0] = x;
+                                Tco[1] = y - 1;
+                                return Tco;
+                            }
+                        }
+                    }
+                    break;
+                case 1:
+                    if (isIn(x + 1, y)) {
+                        if (nodeMap[x + 1][y].getState() == 0) {
+                            targetFound = discoverNode(x + 1, y);
+                            nodeMap[x + 1][y].setPreviousX(x);
+                            nodeMap[x + 1][y].setPreviousY(y);
+                            if (targetFound) {
+                                Tco[0] = x + 1;
+                                Tco[1] = y;
+                                return Tco;
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    if (isIn(x, y + 1)) {
+                        if (nodeMap[x][y + 1].getState() == 0) {
+                            targetFound = discoverNode(x, y + 1);
+                            nodeMap[x][y + 1].setPreviousX(x);
+                            nodeMap[x][y + 1].setPreviousY(y);
+                            if (targetFound) {
+                                Tco[0] = x;
+                                Tco[1] = y + 1;
+                                return Tco;
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (isIn(x - 1, y)) {
+                        if (nodeMap[x - 1][y].getState() == 0) {
+                            targetFound = discoverNode(x - 1, y);
+                            nodeMap[x - 1][y].setPreviousX(x);
+                            nodeMap[x - 1][y].setPreviousY(y);
+                            if (targetFound) {
+                                Tco[0] = x - 1;
+                                Tco[1] = y;
+                                return Tco;
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
 
-            if (isIn(x, y - 1)) {
-                if (nodeMap[x][y - 1].getState() == 0) {
-                    targetFound = discoverNode(x, y - 1);
-                    nodeMap[x][y - 1].setPreviousX(x);
-                    nodeMap[x][y - 1].setPreviousY(y);
-                    if (targetFound) {
-                        Tco[0] = x;
-                        Tco[1] = y - 1;
-                        return Tco;
+            if (direction == 0) {
+                if (isIn(x + 1, y)) {
+                    if (nodeMap[x + 1][y].getState() == 0) {
+                        targetFound = discoverNode(x + 1, y);
+                        nodeMap[x + 1][y].setPreviousX(x);
+                        nodeMap[x + 1][y].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x + 1;
+                            Tco[1] = y;
+                            return Tco;
+                        }
                     }
                 }
-            }
-            if (isIn(x + 1, y)) {
-                if (nodeMap[x + 1][y].getState() == 0) {
-                    targetFound = discoverNode(x + 1, y);
-                    nodeMap[x + 1][y].setPreviousX(x);
-                    nodeMap[x + 1][y].setPreviousY(y);
-                    if (targetFound) {
-                        Tco[0] = x + 1;
-                        Tco[1] = y;
-                        return Tco;
+                if (isIn(x, y + 1)) {
+                    if (nodeMap[x][y + 1].getState() == 0) {
+                        targetFound = discoverNode(x, y + 1);
+                        nodeMap[x][y + 1].setPreviousX(x);
+                        nodeMap[x][y + 1].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x;
+                            Tco[1] = y + 1;
+                            return Tco;
+                        }
                     }
                 }
-            }
-            if (isIn(x, y + 1)) {
-                if (nodeMap[x][y + 1].getState() == 0) {
-                    targetFound = discoverNode(x, y + 1);
-                    nodeMap[x][y + 1].setPreviousX(x);
-                    nodeMap[x][y + 1].setPreviousY(y);
-                    if (targetFound) {
-                        Tco[0] = x;
-                        Tco[1] = y + 1;
-                        return Tco;
+                if (isIn(x - 1, y)) {
+                    if (nodeMap[x - 1][y].getState() == 0) {
+                        targetFound = discoverNode(x - 1, y);
+                        nodeMap[x - 1][y].setPreviousX(x);
+                        nodeMap[x - 1][y].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x - 1;
+                            Tco[1] = y;
+                            return Tco;
+                        }
                     }
                 }
-            }
-            if (isIn(x - 1, y)) {
-                if (nodeMap[x - 1][y].getState() == 0) {
-                    targetFound = discoverNode(x - 1, y);
-                    nodeMap[x - 1][y].setPreviousX(x);
-                    nodeMap[x - 1][y].setPreviousY(y);
-                    if (targetFound) {
-                        Tco[0] = x - 1;
-                        Tco[1] = y;
-                        return Tco;
+            } else if (direction == 1) {
+                if (isIn(x, y - 1)) {
+                    if (nodeMap[x][y - 1].getState() == 0) {
+                        targetFound = discoverNode(x, y - 1);
+                        nodeMap[x][y - 1].setPreviousX(x);
+                        nodeMap[x][y - 1].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x;
+                            Tco[1] = y - 1;
+                            return Tco;
+                        }
+                    }
+                }
+                if (isIn(x, y + 1)) {
+                    if (nodeMap[x][y + 1].getState() == 0) {
+                        targetFound = discoverNode(x, y + 1);
+                        nodeMap[x][y + 1].setPreviousX(x);
+                        nodeMap[x][y + 1].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x;
+                            Tco[1] = y + 1;
+                            return Tco;
+                        }
+                    }
+                }
+                if (isIn(x - 1, y)) {
+                    if (nodeMap[x - 1][y].getState() == 0) {
+                        targetFound = discoverNode(x - 1, y);
+                        nodeMap[x - 1][y].setPreviousX(x);
+                        nodeMap[x - 1][y].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x - 1;
+                            Tco[1] = y;
+                            return Tco;
+                        }
+                    }
+                }
+            } else if (direction == 2) {
+                if (isIn(x, y - 1)) {
+                    if (nodeMap[x][y - 1].getState() == 0) {
+                        targetFound = discoverNode(x, y - 1);
+                        nodeMap[x][y - 1].setPreviousX(x);
+                        nodeMap[x][y - 1].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x;
+                            Tco[1] = y - 1;
+                            return Tco;
+                        }
+                    }
+                }
+                if (isIn(x + 1, y)) {
+                    if (nodeMap[x + 1][y].getState() == 0) {
+                        targetFound = discoverNode(x + 1, y);
+                        nodeMap[x + 1][y].setPreviousX(x);
+                        nodeMap[x + 1][y].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x + 1;
+                            Tco[1] = y;
+                            return Tco;
+                        }
+                    }
+                }
+                if (isIn(x - 1, y)) {
+                    if (nodeMap[x - 1][y].getState() == 0) {
+                        targetFound = discoverNode(x - 1, y);
+                        nodeMap[x - 1][y].setPreviousX(x);
+                        nodeMap[x - 1][y].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x - 1;
+                            Tco[1] = y;
+                            return Tco;
+                        }
+                    }
+                }
+            } else if (direction == 3) {
+                if (isIn(x, y - 1)) {
+                    if (nodeMap[x][y - 1].getState() == 0) {
+                        targetFound = discoverNode(x, y - 1);
+                        nodeMap[x][y - 1].setPreviousX(x);
+                        nodeMap[x][y - 1].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x;
+                            Tco[1] = y - 1;
+                            return Tco;
+                        }
+                    }
+                }
+                if (isIn(x + 1, y)) {
+                    if (nodeMap[x + 1][y].getState() == 0) {
+                        targetFound = discoverNode(x + 1, y);
+                        nodeMap[x + 1][y].setPreviousX(x);
+                        nodeMap[x + 1][y].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x + 1;
+                            Tco[1] = y;
+                            return Tco;
+                        }
+                    }
+                }
+                if (isIn(x, y + 1)) {
+                    if (nodeMap[x][y + 1].getState() == 0) {
+                        targetFound = discoverNode(x, y + 1);
+                        nodeMap[x][y + 1].setPreviousX(x);
+                        nodeMap[x][y + 1].setPreviousY(y);
+                        if (targetFound) {
+                            Tco[0] = x;
+                            Tco[1] = y + 1;
+                            return Tco;
+                        }
                     }
                 }
             }
             nodeMap[x][y].setState(2);
         }
-
         return Tco;
     }
 
@@ -245,7 +481,7 @@ public class AIPlayer implements Observer {
             case 0:
                 GameEngine.getInstance().moveUp();
                 break;
-            case 99:    //shhot
+            case 99:    //shoot
                 GameEngine.getInstance().shoot();
                 break;
             default:
@@ -271,7 +507,7 @@ public class AIPlayer implements Observer {
             case 1:
                 if (isIn(thisPlayer.getX() + dist, thisPlayer.getY())
                         && map[thisPlayer.getX() + dist][thisPlayer.getY()] instanceof Player
-                        && !(map[thisPlayer.getX()+dist][thisPlayer.getY()] instanceof DeadPlayer)
+                        && !(map[thisPlayer.getX() + dist][thisPlayer.getY()] instanceof DeadPlayer)
                         && isShootable(thisPlayer.getX() + dist, thisPlayer.getY(), direction)) {
                     return true;
                 } else {
@@ -289,7 +525,7 @@ public class AIPlayer implements Observer {
             case 3:
                 if (isIn(thisPlayer.getX() - dist, thisPlayer.getY())
                         && map[thisPlayer.getX() - dist][thisPlayer.getY()] instanceof Player
-                        && !(map[thisPlayer.getX()-dist][thisPlayer.getY()] instanceof DeadPlayer)
+                        && !(map[thisPlayer.getX() - dist][thisPlayer.getY()] instanceof DeadPlayer)
                         && isShootable(thisPlayer.getX() - dist, thisPlayer.getY(), direction)) {
                     return true;
                 } else {

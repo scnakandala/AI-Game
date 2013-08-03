@@ -3,13 +3,13 @@ package ai;
 import java.util.LinkedList;
 
 public class Queue {
-    private LinkedList<Node>  nodeList = new LinkedList<Node>();
+    private LinkedList<QueueNode>  nodeList = new LinkedList<QueueNode>();
 
-    public void enqueue(Node e) {
+    public void enqueue(QueueNode e) {
         nodeList.addLast(e);
     }
 
-    public Node dequeue() {
+    public QueueNode dequeue() {
         return nodeList.pollFirst();
     }
 

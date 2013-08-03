@@ -275,9 +275,10 @@ public class GameMapUI extends JFrame implements Observer {
                     }
                 }
             }
-        } else if ((obj instanceof DeadPlayer) && (((DeadPlayer) obj).getCoins() > 0)) {
-            panel = new ImagePanel(coinPile);
-        } else {
+//        } else if ((obj instanceof DeadPlayer) && (((DeadPlayer) obj).getCoins() > 0)) {
+//            panel = new ImagePanel(coinPile);
+//        } 
+        }else {
             panel = new ImagePanel(freeSpace);
         }
         return panel;
